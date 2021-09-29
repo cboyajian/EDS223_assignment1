@@ -18,3 +18,14 @@ library(spDataLarge)
 library(tmap)
 ```
 
+
+```{r}
+# Load dataset
+
+```
+
+
+```{r}
+
+```
+
