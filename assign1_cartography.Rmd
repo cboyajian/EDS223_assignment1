@@ -22,10 +22,12 @@ library(tmap)
 ```{r}
 # Load dataset
 coffee <- coffee_data
+countries <- ne_countries()
 ```
 
 
 ```{r}
-
+# Creating basic map
+plot(ne_countries())
 ```
 
