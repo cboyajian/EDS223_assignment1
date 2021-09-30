@@ -18,16 +18,28 @@ library(spDataLarge)
 library(tmap)
 ```
 
-
+## Load and manipulate data
 ```{r}
-# Load dataset
-coffee <- coffee_data
-countries <- ne_countries()
+# Load coffee dataset
+coffee <- coffee_data %>% 
+  mutate()
+
+# Convert `ne_countries()` to class `sf` - maybe not necessary
+sf_countries <- ne_countries(returnclass = 'sf')
+
+# Merge `world` with `coffee` datasets
+sf_coffee <- left_join(x = world, y = coffee, by = "name_long") %>% 
+  filter(coffee_production_2016 > 1)
 ```
 
+## Create Basic Plots
+```{r}
+# Plotting two columns
+plot(sf_coffee[c("coffee_production_2016", "coffee_production_2017")])
+```
 
 ```{r}
-# Creating basic map
-plot(ne_countries())
+# Plotting one column
+plot(sf_coffee["coffee_production_2016"])
 ```
 
