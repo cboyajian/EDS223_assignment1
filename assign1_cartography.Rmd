@@ -44,7 +44,11 @@ plot(sf_coffee["coffee_production_2016"])
 # Plotting one attribute with `tm_shape()`
 tm_shape(sf_coffee) +
   tm_polygons(col = "coffee_production_2016", # `tm_polygons()` replaces `tm_shape() + tm_borders()` combo
-          title = "Coffee Production in 2016")
+          title = "Coffee Production in 2016") + 
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom") +
+  tm_credits("Testing",
+             position = c("right", "bottom"))
 ```
 
 ```{r}
