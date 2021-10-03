@@ -48,13 +48,11 @@ tm_shape(sf_coffee,
              position = c("left", "bottom")) +
   tm_layout(bg.color = "lightblue")
 ```
-
+## Creating smaller map
 ```{r}
 # how to see coordinate system info about dataset `st_crs(world)`
 #st_transform(st_sfc(st_point(c(-119.841830, 34.413415)), crs = 4326), crs = 3310)
 ```
-
-
 
 ```{r}
 # Creating smaller map (could use as inset)
@@ -62,12 +60,28 @@ center_south_america <- st_bbox(c(xmin = -121.342621, xmax = -28.003464,
                                   ymin = -56.838832, ymax = 34.580083),
                                 crs = st_crs(world)) %>% 
   st_as_sfc()
-
 ```
 
+```{r}
+tm_shape(sf_coffee, bbox = center_south_america) +
+  tm_polygons(col = "coffee_production_2016",
+              title = "Number of 60 kg Produced Annually",
+              #breaks = c(0, 1, 2, 3, 4) * 1000,
+              colorNA = "white",
+              palette = "Reds") +
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom",
+            fontface = 1) +
+  tm_credits("This map shows the\n coffee production in\n 2016 for blah blah\n blah blah",
+             position = c("left", "bottom"),
+             bg.color = "lightblue",
+             width = .38) +
+  tm_compass(type = "4star",
+             position = c("right", "top")) +
+  tm_layout(bg.color = "lightblue")
+```
 
-
-
+## Faceting maps
 ```{r}
 # Plotting one attribute with `tm_shape()`
 tm_coffee_2016 <- tm_shape(sf_coffee) +
