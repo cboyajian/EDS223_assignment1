@@ -21,11 +21,7 @@ library(tmap)
 ## Load and manipulate data
 ```{r}
 # Load coffee dataset
-coffee <- coffee_data %>% 
-  mutate()
-
-# Convert `ne_countries()` to class `sf` - maybe not necessary
-sf_countries <- ne_countries(returnclass = 'sf')
+coffee <- coffee_data
 
 # Merge `coffee` with `world` datasets (cannot merge world into coffee)
 sf_coffee <- left_join(x = world, y = coffee, by = "name_long")
@@ -33,23 +29,44 @@ sf_coffee <- left_join(x = world, y = coffee, by = "name_long")
 
 ## Create Basic Plots
 ```{r}
-# Plotting two attributes (columns) with `plot()`
-plot(sf_coffee[c("coffee_production_2016", "coffee_production_2017")])
+# Plotting one attribute with `tm_shape()`
+# `tm_polygons()` replaces `tm_fill() + tm_borders()` combo
 
-# Plotting one attribute (column) with `plot()`
-plot(sf_coffee["coffee_production_2016"])
+tm_shape(sf_coffee,
+         title = "Coffee Production in 2016") +
+  tm_polygons(col = "coffee_production_2016",
+              breaks = c(0, 1, 2, 3, 4) * 1000,
+              colorNA = "white",
+              palette = "BuPu") +
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom",
+            fontface = 1) +
+  tm_credits("Testing: this map shows the coffee production in\n 2016 for blah blah blah blah",
+             position = c("right", "bottom"),
+             bg.color = "white") +
+  tm_compass(type = "4star",
+             position = c("left", "bottom")) +
+  tm_layout(bg.color = "lightblue")
 ```
 
 ```{r}
-# Plotting one attribute with `tm_shape()`
-tm_shape(sf_coffee) +
-  tm_polygons(col = "coffee_production_2016", # `tm_polygons()` replaces `tm_shape() + tm_borders()` combo
-          title = "Coffee Production in 2016") + 
-  tm_layout(legend.outside = TRUE,
-            legend.outside.position = "bottom") +
-  tm_credits("Testing",
-             position = c("right", "bottom"))
+# how to see coordinate system info about dataset `st_crs(world)`
+#st_transform(st_sfc(st_point(c(-119.841830, 34.413415)), crs = 4326), crs = 3310)
 ```
+
+
+
+```{r}
+# Creating smaller map (could use as inset)
+center_south_america <- st_bbox(c(xmin = -121.342621, xmax = -28.003464,
+                                  ymin = -56.838832, ymax = 34.580083),
+                                crs = st_crs(world)) %>% 
+  st_as_sfc()
+
+```
+
+
+
 
 ```{r}
 # Plotting one attribute with `tm_shape()`
@@ -61,6 +78,7 @@ tm_coffee_2017 <- tm_shape(sf_coffee) +
   tm_borders() +
   tm_fill("coffee_production_2017")
 
+# Faceting multiple maps together
 tmap_arrange(tm_coffee_2016, tm_coffee_2017)
 ```
 
